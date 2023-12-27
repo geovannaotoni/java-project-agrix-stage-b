@@ -1,7 +1,9 @@
 package com.betrybe.agrix.controllers;
 
 import com.betrybe.agrix.controllers.dto.CropDto;
+import com.betrybe.agrix.controllers.dto.FertilizerDto;
 import com.betrybe.agrix.models.entities.Crop;
+import com.betrybe.agrix.models.entities.Fertilizer;
 import com.betrybe.agrix.services.CropService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +61,20 @@ public class CropController {
     cropService.insertFertilizerToCrop(cropId, fertilizerId);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body("Fertilizante e plantação associados com sucesso!");
+  }
+
+  /**
+   * Gets fertilizers by crop id.
+   *
+   * @param cropId the crop id
+   * @return the fertilizers by crop id
+   */
+  @GetMapping("/{cropId}/fertilizers")
+  public ResponseEntity<List<FertilizerDto>> getFertilizersByCropId(@PathVariable Long cropId) {
+    List<Fertilizer> fertilizers = cropService.getFertilizersByCropId(cropId);
+    List<FertilizerDto> fertilizerDtos = fertilizers.stream()
+        .map(fertilizer -> FertilizerDto.toDto(fertilizer))
+        .toList();
+    return ResponseEntity.ok(fertilizerDtos);
   }
 }
