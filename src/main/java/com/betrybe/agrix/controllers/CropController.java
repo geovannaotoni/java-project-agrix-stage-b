@@ -5,6 +5,7 @@ import com.betrybe.agrix.controllers.dto.FertilizerDto;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.models.entities.Fertilizer;
 import com.betrybe.agrix.services.CropService;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -76,5 +78,22 @@ public class CropController {
         .map(fertilizer -> FertilizerDto.toDto(fertilizer))
         .toList();
     return ResponseEntity.ok(fertilizerDtos);
+  }
+
+  /**
+   * Gets crops by harvest day.
+   *
+   * @param start the start
+   * @param end   the end
+   * @return the crops by harvest day
+   */
+  @GetMapping("/search")
+  public ResponseEntity<List<CropDto>> getCropsByHarvestDay(@RequestParam LocalDate start,
+      @RequestParam LocalDate end) {
+    List<Crop> crops = cropService.findByHarvestDateBetween(start, end);
+    List<CropDto> cropDtos = crops.stream()
+        .map(crop -> CropDto.toDto(crop))
+        .toList();
+    return ResponseEntity.ok(cropDtos);
   }
 }
