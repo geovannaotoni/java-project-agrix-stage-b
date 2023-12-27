@@ -5,9 +5,11 @@ import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.services.CropService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +44,20 @@ public class CropController {
   public ResponseEntity<CropDto> getCropById(@PathVariable Long cropId) {
     Crop crop = cropService.getCropById(cropId);
     return ResponseEntity.ok(CropDto.toDto(crop));
+  }
+
+  /**
+   * Insert fertilizer to crop response entity.
+   *
+   * @param cropId       the crop id
+   * @param fertilizerId the fertilizer id
+   * @return the response entity
+   */
+  @PostMapping("/{cropId}/fertilizers/{fertilizerId}")
+  public ResponseEntity<String> insertFertilizerToCrop(@PathVariable Long cropId,
+      @PathVariable Long fertilizerId) {
+    cropService.insertFertilizerToCrop(cropId, fertilizerId);
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body("Fertilizante e plantação associados com sucesso!");
   }
 }
